@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Shiu-Ting Ling">
+<meta name="dcterms.date" content="2025-10-07">
+
+<title>Assignment 4: Webscraping 1 – UTD_SDAR</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./icon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1abae18f1c827df6b05c9ac6e085bdaa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">UTD_SDAR</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-dataframed-review" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">DataFramed Review</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-dataframed-review">    
+        <li>
+    <a class="dropdown-item" href="./DataFramed320.html">
+ <span class="dropdown-text">#320 The Next Industrial Revolution is Industrial AI</span></a>
+  </li>  
+        <li class="dropdown-header">To be continued…</li>
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">about</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/sarahokra/UTD_SDAR"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./DC_assignment01.html">EPPS6302</a></li><li class="breadcrumb-item"><a href="./DC_assignment04.html">Assignment 4</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">EPPS6356</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DV_assignment01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DV_assignment02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DV_assignment03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DV_assignment04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 4</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DV_assignment05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 5</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DV_assignment06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 6</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DV_assignment07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 7</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DV_assignment08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 8</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">EPPS6354</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_assignment01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_assignment02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_assignment03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_assignment04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 4</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://www.canva.com/design/DAGgUhTSGi4/qcXAi5X5Adf-zrd3mwco2w/edit?utm_content=DAGgUhTSGi4&amp;utm_campaign=designshare&amp;utm_medium=link2&amp;utm_source=sharebutton" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Proposal</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_assignment05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 5</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_assignment06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 6</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_assignment07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 7</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_Progress02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Progress Presentation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./IM_Final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Presentation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">EPPS6302</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DC_assignment01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DC_assignment02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DC_assignment03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DC_assignment04.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Assignment 4</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DC_assignment05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 5</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./DC_assignment06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignment 6</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">My Implementation</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TWBC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Female Breast Cancer in Taiwan</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">To be continued...</span></span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#use-rvest_wiki01.r-to-scrape-foreign-reserve-data-from-wikipedia" id="toc-use-rvest_wiki01.r-to-scrape-foreign-reserve-data-from-wikipedia" class="nav-link active" data-scroll-target="#use-rvest_wiki01.r-to-scrape-foreign-reserve-data-from-wikipedia"><code>1.</code> Use rvest_wiki01.R to scrape Foreign reserve data from Wikipedia</a>
+  <ul class="collapse">
+  <li><a href="#a.-modify-the-program-to-scrape-other-tables-in-wikipedia" id="toc-a.-modify-the-program-to-scrape-other-tables-in-wikipedia" class="nav-link" data-scroll-target="#a.-modify-the-program-to-scrape-other-tables-in-wikipedia"><code>a.</code> Modify the program to scrape other tables in Wikipedia</a></li>
+  <li><a href="#b.-clean-up-the-dataframe" id="toc-b.-clean-up-the-dataframe" class="nav-link" data-scroll-target="#b.-clean-up-the-dataframe"><code>b.</code> Clean up the dataframe</a></li>
+  <li><a href="#c.-suggest-a-data-plan-to-acquire-web-data-for-research." id="toc-c.-suggest-a-data-plan-to-acquire-web-data-for-research." class="nav-link" data-scroll-target="#c.-suggest-a-data-plan-to-acquire-web-data-for-research."><code>c.</code> Suggest a data plan to acquire web data for research.</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./DC_assignment01.html">EPPS6302</a></li><li class="breadcrumb-item"><a href="./DC_assignment04.html">Assignment 4</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Assignment 4: Webscraping 1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Shiu-Ting Ling </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 7, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="use-rvest_wiki01.r-to-scrape-foreign-reserve-data-from-wikipedia" class="level1">
+<h1><code>1.</code> Use rvest_wiki01.R to scrape Foreign reserve data from Wikipedia</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Workshop: Scraping webpages with R rvest package</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Prerequisites: Chrome browser, Selector Gadget (https://selectorgadget.com/)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lubridate' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("rvest")</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rvest'
+
+The following object is masked from 'package:readr':
+
+    guess_encoding</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://en.wikipedia.org/wiki/List_of_countries_by_foreign-exchange_reserves'</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Reading the HTML code from the Wiki website</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>wikiforreserve <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(wikiforreserve)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "xml_document" "xml_node"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get the XPath data using Inspect element feature in Safari, Chrome or Firefox</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## At Inspect tab, look for &lt;table class=....&gt; tag. Leave the table close</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Right click the table and Copy XPath, paste at html_nodes(xpath =)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>foreignreserve <span class="ot">&lt;-</span> wikiforreserve <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_nodes</span>(<span class="at">xpath=</span><span class="st">'//*[@id="mw-content-text"]/div/table[1]'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(foreignreserve)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "list"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fores <span class="ot">=</span> foreignreserve[[<span class="dv">1</span>]]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the structure of the fores data frame</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View(fores)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  Country(as recognize…¹ Continent Foreign exchange res…² Foreign exchange res…³
+  &lt;chr&gt;                  &lt;chr&gt;     &lt;chr&gt;                  &lt;chr&gt;                 
+1 Country(as recognized… Continent Including gold         Including gold        
+2 Country(as recognized… Continent millions U.S.$         Change                
+3 China                  Asia      3,643,149              41,079                
+4 Japan                  Asia      1,324,210              19,774                
+5 Switzerland            Europe    1,007,710              13,935                
+6 Russia                 Europe/A… 734,100                14,300                
+# ℹ abbreviated names: ¹​`Country(as recognized by the U.N.)`,
+#   ²​`Foreign exchange reserves`, ³​`Foreign exchange reserves`
+# ℹ 4 more variables: `Foreign exchange reserves` &lt;chr&gt;,
+#   `Foreign exchange reserves` &lt;chr&gt;, `Last reporteddate` &lt;chr&gt;, Ref. &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove rows 2 and 3 from the table</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fores <span class="ot">=</span> fores[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), ]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign new column names</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fores) <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Country"</span>,                    <span class="co"># Country name</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Continent"</span>,                  <span class="co"># Continent</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Forex_IncGold_Millions"</span>,    <span class="co"># Foreign exchange reserves (including gold) in millions USD</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Change_IncGold"</span>,            <span class="co"># Change (including gold)</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Forex_ExcGold_Millions"</span>,    <span class="co"># Foreign exchange reserves (excluding gold) in millions USD</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Change_ExcGold"</span>,            <span class="co"># Change (excluding gold)</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Last_Reported_Date"</span>,        <span class="co"># Last reported date</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Reference"</span>                   <span class="co"># Reference</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Country"                "Continent"              "Forex_IncGold_Millions"
+[4] "Change_IncGold"         "Forex_ExcGold_Millions" "Change_ExcGold"        
+[7] "Last_Reported_Date"     "Reference"             </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a RANK column at the beginning</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>fores <span class="ot">&lt;-</span> fores <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Rank =</span> <span class="fu">row_number</span>(), <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># View(fores)</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Rank"                   "Country"                "Continent"             
+[4] "Forex_IncGold_Millions" "Change_IncGold"         "Forex_ExcGold_Millions"
+[7] "Change_ExcGold"         "Last_Reported_Date"     "Reference"             </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first 10 rows of the Country variable in the data frame</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fores<span class="sc">$</span>Country, <span class="at">n=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "China"        "Japan"        "Switzerland"  "Russia"       "India"       
+ [6] "Taiwan"       "Saudi Arabia" "Hong Kong"    "South Korea"  "Brazil"      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Clean up variables</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## What type is Rank? </span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">## How about Date? How to fix it?</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove trailing notes in Date variable</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># library(stringr)</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># fores$newdate = str_split_fixed(fores$Last_Reported_Date, "\\[", n = 2)[, 1]</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fores$newdate = trimws(fores$newdate)</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># fores[1:2, ]</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint:</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># newfores = fores[-c(1, 2), ]</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="do">## write.csv(fores, "newfores.csv", row.names = FALSE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="a.-modify-the-program-to-scrape-other-tables-in-wikipedia" class="level2">
+<h2 class="anchored" data-anchor-id="a.-modify-the-program-to-scrape-other-tables-in-wikipedia"><code>a.</code> Modify the program to scrape other tables in Wikipedia</h2>
+<p>In this assignment, I scraped the <strong>Pretty Cure (光之美少女)</strong> information from Wikipedia. I extracted the series list tables from both the <strong>Traditional Chinese</strong> and <strong>English</strong> Wikipedia pages, then integrated the information from both sources into a single table/dataframe.</p>
+<ul>
+<li><p><strong>Chinese Wikipedia</strong>: https://zh.wikipedia.org/wiki/光之美少女系列</p></li>
+<li><p><strong>English Wikipedia</strong>: https://en.wikipedia.org/wiki/Pretty_Cure</p></li>
+</ul>
+<p>The Chinese page contains detailed broadcast period information in the format “YYYY年MM月DD日”, while the English page provides series titles, generation, episodes, and director information. By merging both sources, I created a comprehensive dataset that includes English titles with properly formatted start and end dates.</p>
+</section>
+<section id="b.-clean-up-the-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="b.-clean-up-the-dataframe"><code>b.</code> Clean up the dataframe</h2>
+<p><code>i.</code> Date variable</p>
+<p><code>ii.</code> Removing unneeded rows and columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("rvest")</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------Import "Pretty Cure series" Wikipedia (Chinese)-------------</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>url_chi <span class="ot">&lt;-</span> <span class="st">'https://zh.wikipedia.org/wiki/%E5%85%89%E4%B9%8B%E7%BE%8E%E5%B0%91%E5%A5%B3%E7%B3%BB%E5%88%97'</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>wiki_pc_chi <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url_chi)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(wiki_pc_chi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "xml_document" "xml_node"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pretty_cure_chi <span class="ot">&lt;-</span> wiki_pc_chi <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_nodes</span>(<span class="at">xpath=</span><span class="st">'//*[@id="mw-content-text"]/div/table[2]'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>()</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pretty_cure_chi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "list"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pc_chi <span class="ot">=</span> pretty_cure_chi[[<span class="dv">1</span>]]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the last row of the data frame</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>pc_chi <span class="ot">&lt;-</span> pc_chi[<span class="sc">-</span><span class="fu">nrow</span>(pc_chi), ]</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>pc_chi <span class="ot">&lt;-</span> pc_chi <span class="sc">%&gt;%</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract start date (first date)</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">播出開始</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">str_extract</span>(<span class="st">`</span><span class="at">播出期間</span><span class="st">`</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">d{4}年</span><span class="sc">\\</span><span class="st">d{1,2}月</span><span class="sc">\\</span><span class="st">d{1,2}日"</span>),</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract end date (second date)</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">播出結束</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">str_extract</span>(<span class="st">`</span><span class="at">播出期間</span><span class="st">`</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">d{4}年</span><span class="sc">\\</span><span class="st">d{1,2}月</span><span class="sc">\\</span><span class="st">d{1,2}日(?!.*年)"</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co"># View results</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pc_chi <span class="sc">%&gt;%</span> <span class="fu">select</span>(系列, <span class="st">`</span><span class="at">播出期間</span><span class="st">`</span>, <span class="st">`</span><span class="at">播出開始</span><span class="st">`</span>, <span class="st">`</span><span class="at">播出結束</span><span class="st">`</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  系列  播出期間                  播出開始     播出結束     
+  &lt;chr&gt; &lt;chr&gt;                     &lt;chr&gt;        &lt;chr&gt;        
+1 1     2004年2月1日2005年1月30日 2004年2月1日 2005年1月30日
+2 2     2005年2月6日2006年1月29日 2005年2月6日 2006年1月29日
+3 3     2006年2月5日2007年1月28日 2006年2月5日 2007年1月28日
+4 4     2007年2月4日2008年1月27日 2007年2月4日 2008年1月27日
+5 5     2008年2月3日2009年1月25日 2008年2月3日 2009年1月25日
+6 6     2009年2月1日2010年1月31日 2009年2月1日 2010年1月31日</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set English locale</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.setlocale</span>(<span class="st">"LC_TIME"</span>, <span class="st">"English"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "English_United States.1252"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split and convert from Broadcast period</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>pc_chi <span class="ot">&lt;-</span> pc_chi <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Step 1: Split dates</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">temp =</span> <span class="fu">str_replace</span>(<span class="st">`</span><span class="at">播出期間</span><span class="st">`</span>, <span class="st">"(日)(</span><span class="sc">\\</span><span class="st">d{4}年)"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1|</span><span class="sc">\\</span><span class="st">2"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(temp, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"播出開始"</span>, <span class="st">"播出結束"</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">|"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Step 2: Convert to English date format</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Start_date =</span> <span class="st">`</span><span class="at">播出開始</span><span class="st">`</span> <span class="sc">%&gt;%</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_replace_all</span>(<span class="st">"年|月"</span>, <span class="st">"-"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_replace</span>(<span class="st">"日"</span>, <span class="st">""</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ymd</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">format</span>(<span class="st">"%e %b %Y"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_trim</span>(),</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">End_date =</span> <span class="st">`</span><span class="at">播出結束</span><span class="st">`</span> <span class="sc">%&gt;%</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_replace_all</span>(<span class="st">"年|月"</span>, <span class="st">"-"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_replace</span>(<span class="st">"日"</span>, <span class="st">""</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ymd</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">format</span>(<span class="st">"%e %b %Y"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_trim</span>()</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Expected 2 pieces. Missing pieces filled with `NA` in 1 rows [22].</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. View results</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>pc_chi <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(系列, 作品名稱, <span class="st">`</span><span class="at">播出開始</span><span class="st">`</span>, Start_date, </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">播出結束</span><span class="st">`</span>, End_date) <span class="sc">%&gt;%</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   系列  作品名稱              播出開始     Start_date 播出結束      End_date   
+   &lt;chr&gt; &lt;chr&gt;                 &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;         &lt;chr&gt;      
+ 1 1     光之美少女            2004年2月1日 1 Feb 2004 2005年1月30日 30 Jan 2005
+ 2 2     光之美少女 Max Heart  2005年2月6日 6 Feb 2005 2006年1月29日 29 Jan 2006
+ 3 3     光之美少女Splash Star 2006年2月5日 5 Feb 2006 2007年1月28日 28 Jan 2007
+ 4 4     Yes! 光之美少女5      2007年2月4日 4 Feb 2007 2008年1月27日 27 Jan 2008
+ 5 5     Yes! 光之美少女5GoGo! 2008年2月3日 3 Feb 2008 2009年1月25日 25 Jan 2009
+ 6 6     光之美少女：幸福精靈  2009年2月1日 1 Feb 2009 2010年1月31日 31 Jan 2010
+ 7 7     光之美少女：甜蜜天使  2010年2月7日 7 Feb 2010 2011年1月30日 30 Jan 2011
+ 8 8     光之美少女：美樂天使  2011年2月6日 6 Feb 2011 2012年1月29日 29 Jan 2012
+ 9 9     Smile 光之美少女！    2012年2月5日 5 Feb 2012 2013年1月27日 27 Jan 2013
+10 10    心動！光之美少女      2013年2月3日 3 Feb 2013 2014年1月26日 26 Jan 2014</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pc_chi <span class="ot">&lt;-</span> pc_chi <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Series =</span> <span class="st">`</span><span class="at">系列</span><span class="st">`</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pc_chi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Series"     "代"         "作品名稱"   "播出期間"   "系列導演"  
+ [6] "集數"       "備註"       "播出開始"   "播出結束"   "Start_date"
+[11] "End_date"  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------Import "Pretty Cure" Wikipedia (English)-------------</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>url_eng <span class="ot">&lt;-</span> <span class="st">'https://en.wikipedia.org/wiki/Pretty_Cure'</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>wiki_pc_eng <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url_eng)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(wiki_pc_eng)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "xml_document" "xml_node"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>pretty_cure_eng <span class="ot">&lt;-</span> wiki_pc_eng <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_nodes</span>(<span class="at">xpath=</span><span class="st">'//*[@id="mw-content-text"]/div/table[3]'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>()</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pretty_cure_eng)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "list"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>pc_eng <span class="ot">=</span> pretty_cure_eng[[<span class="dv">1</span>]]</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the last row of the data frame</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>pc_eng <span class="ot">&lt;-</span> pc_eng[<span class="sc">-</span><span class="fu">nrow</span>(pc_eng), ]</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pc_eng) <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Blank"</span>,</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Series"</span>,</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Title"</span>,</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Generation"</span>, </span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Run"</span>,</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Episodes"</span>,</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Series director"</span>,</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Ref(s)"</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>pc_eng <span class="ot">&lt;-</span> pc_eng <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Blank)</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pc_eng)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Series"          "Title"           "Generation"      "Run"            
+[5] "Episodes"        "Series director" "Ref(s)"         </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pc_eng)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  Series Title              Generation Run   Episodes `Series director` `Ref(s)`
+  &lt;chr&gt;  &lt;chr&gt;              &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;             &lt;chr&gt;   
+1 1      Pretty Cure        1st        2004… 49       Daisuke Nishio    ""      
+2 2      Pretty Cure Max H… 1st        2005… 47       Daisuke Nishio    ""      
+3 3      PreCure Splash St… 2nd        2006… 49       Toshiaki Komura   ""      
+4 4      Yes! PreCure 5     3rd        2007… 49       Toshiaki Komura   ""      
+5 5      Yes! PreCure 5 Go… 3rd        2008… 48       Toshiaki Komura   ""      
+6 6      Fresh PreCure!     4th        2009… 50       Junji Shimizu, A… ""      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge Broadcast period from pc_chi to pc_eng</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>pc_df <span class="ot">&lt;-</span> pc_eng <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(pc_chi <span class="sc">%&gt;%</span> <span class="fu">select</span>(Series, Start_date, End_date), </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="st">"Series"</span>)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>pc_df <span class="ot">&lt;-</span> pc_df <span class="sc">%&gt;%</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Start date</span><span class="st">`</span> <span class="ot">=</span> Start_date,</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">End date</span><span class="st">`</span> <span class="ot">=</span> End_date</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>pc_df <span class="ot">&lt;-</span> pc_df <span class="sc">%&gt;%</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Series, Title, Generation, <span class="st">`</span><span class="at">Start date</span><span class="st">`</span>, <span class="st">`</span><span class="at">End date</span><span class="st">`</span>, </span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>         Episodes, <span class="st">`</span><span class="at">Series director</span><span class="st">`</span>, <span class="st">`</span><span class="at">Ref(s)</span><span class="st">`</span>)</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="co"># View results</span></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pc_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Series"          "Title"           "Generation"      "Start date"     
+[5] "End date"        "Episodes"        "Series director" "Ref(s)"         </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first 10 rows of the Title variable in the data frame</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pc_df<span class="sc">$</span>Title, <span class="at">n=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Pretty Cure"           "Pretty Cure Max Heart" "PreCure Splash Star"  
+ [4] "Yes! PreCure 5"        "Yes! PreCure 5 GoGo!"  "Fresh PreCure!"       
+ [7] "HeartCatch PreCure!"   "Suite PreCure"         "Smile PreCure!"       
+[10] "DokiDoki! PreCure"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pc_df, <span class="at">n =</span> <span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22 × 8
+   Series Title    Generation `Start date` `End date` Episodes `Series director`
+   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;            
+ 1 1      Pretty … 1st        1 Feb 2004   30 Jan 20… 49       Daisuke Nishio   
+ 2 2      Pretty … 1st        6 Feb 2005   29 Jan 20… 47       Daisuke Nishio   
+ 3 3      PreCure… 2nd        5 Feb 2006   28 Jan 20… 49       Toshiaki Komura  
+ 4 4      Yes! Pr… 3rd        4 Feb 2007   27 Jan 20… 49       Toshiaki Komura  
+ 5 5      Yes! Pr… 3rd        3 Feb 2008   25 Jan 20… 48       Toshiaki Komura  
+ 6 6      Fresh P… 4th        1 Feb 2009   31 Jan 20… 50       Junji Shimizu, A…
+ 7 7      HeartCa… 5th        7 Feb 2010   30 Jan 20… 49       Tatsuya Nagamine 
+ 8 8      Suite P… 6th        6 Feb 2011   29 Jan 20… 48       Munehisa Sakai   
+ 9 9      Smile P… 7th        5 Feb 2012   27 Jan 20… 48       Takashi Otsuka   
+10 10     DokiDok… 8th        3 Feb 2013   26 Jan 20… 49       Go Koga          
+11 11     Happine… 9th        2 Feb 2014   25 Jan 20… 49       Tatsuya Nagamine 
+12 12     Go! Pri… 10th       1 Feb 2015   31 Jan 20… 50       Yuta Tanaka      
+13 13     Witchy … 11th       7 Feb 2016   29 Jan 20… 50       Masato Mitsuka   
+14 14     Kirakir… 12th       5 Feb 2017   28 Jan 20… 49       Kohei Kureta, Yu…
+15 15     Hug! Pr… 13th       4 Feb 2018   27 Jan 20… 49       Junichi Sato, Ak…
+16 16     Star Tw… 14th       3 Feb 2019   26 Jan 20… 49       Hiroaki Miyamoto 
+17 17     Healin'… 15th       2 Feb 2020   21 Feb 20… 45       Yoko Ikeda       
+18 18     Tropica… 16th       28 Feb 2021  30 Jan 20… 46       Yutaka Tsuchida  
+19 19     Delicio… 17th       6 Feb 2022   29 Jan 20… 45       Toshinori Fukasa…
+20 20     Soaring… 18th       5 Feb 2023   28 Jan 20… 50       Koji Ogawa       
+21 21     Wonderf… 19th       4 Feb 2024   26 Jan 20… 50       Masanori Sato    
+22 22     You and… 20th       2 Feb 2025   &lt;NA&gt;       TBA      Chiaki Kon       
+# ℹ 1 more variable: `Ref(s)` &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="do">## write.csv(pc_df, "pc_df.csv", row.names = FALSE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="c.-suggest-a-data-plan-to-acquire-web-data-for-research." class="level2">
+<h2 class="anchored" data-anchor-id="c.-suggest-a-data-plan-to-acquire-web-data-for-research."><code>c.</code> Suggest a data plan to acquire web data for research.</h2>
+<p>To systematically collect and update data for research, I would follow these steps:</p>
+<p><code>1.</code> Identify reliable data sources such as Wikipedia, government open data portals, or official databases related to the research topic.</p>
+<p><code>2.</code> Use R web-scraping packages like rvest or APIs through httr to extract tables or JSON data automatically.</p>
+<p><code>3.</code> Clean and structure the dataset by removing redundant rows/columns, converting date variables, and standardizing variable names.</p>
+<p><code>4.</code> Store the cleaned data in a local CSV file or database (e.g., SQLite) for analysis.</p>
+<p><code>5.</code> Automate the process using scheduled R scripts to regularly update the dataset.</p>
+<p><code>6.</code> Apply the dataset in research — for example, analyzing long-term trends in anime production or cultural media evolution.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
